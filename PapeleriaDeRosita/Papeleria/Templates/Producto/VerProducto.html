@@ -1,0 +1,44 @@
+{% extends "MenuPrincipal.html" %} 
+{% block titulo %} Productos {% endblock %}
+{% block contenido %} 
+<div class="card">
+    <div class="card-header">
+        <a name="" id="" class="btn btn-success" href="{% url 'CrearProducto' %}" role="button">Nuevo producto</a>
+    </div>
+    <div class="card-body">
+        <h4 class="card-title">Productos en inventario</h4>
+        <div class="table-responsive">
+            <table class="table table-primary">
+                <thead>
+                    <tr>
+                        <th scope="col">ID del producto</th>
+                        <th scope="col">Categoria</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Cantidad disponible</th>
+                        <th scope="col">Precio de venta unitario</th>
+                        <th scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for Productos in Productos %}
+                        <td>{{ Productos.ID_PRODUCTO }}</td>
+                        <td>{{ Productos.ID_CATEGORIA_PRODUCTO.DESCRIPCION_CATEGORIA }}</td>
+                        <td>{{ Productos.DESCRIPCION_PRODUCTO }}</td>
+                        <td>{{ Productos.CANTIDAD_EXIS_PRODUCTO }}</td>
+                        <td>{{ Productos.PRECIO_VENTA_PRODUCTO }}</td>
+                        <td>{{ Productos.ESTADO_PRODUCTO }}</td>
+                        <td><a name="" id="" class="btn btn-info" href="" role="button">Editar</a></td>
+                        <td><a name="" id="" class="btn btn-danger" href="" role="button">Borrar</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+    <div class="card-footer text-muted">
+        
+    </div>
+</div>
+{% endblock %}
