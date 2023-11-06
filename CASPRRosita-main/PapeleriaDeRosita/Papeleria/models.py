@@ -16,8 +16,8 @@ class Cliente(models.Model):
         return self.NOMBRE_CLIENTE
 
 class Usuarios(models.Model):
-    usuario=models.AutoField(primary_key=True, verbose_name="Nombre se usuario", null=False);
-    contrasenia=models.AutoField(primary_key=True, verbose_name="Contraseña del usuario", null=False)
+    usuario=models.AutoField(primary_key=True, verbose_name="Nombre se usuario");
+    contrasenia=models.AutoField(max_lenght=20, verbose_name="Contraseña del usuario", null=False)
     def __str__(self):
         return self.usuario
 
