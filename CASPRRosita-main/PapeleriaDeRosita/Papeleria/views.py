@@ -10,6 +10,31 @@ from .forms import *
 def Inicio(request):
     return render(request, 'MenuPrincipal.html')
 
+@csrf_protect
+def login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        if LoginManager.login(username, password):
+            # Obtener el código del usuario y autenticar el login
+
+            clasificacion = Clasificacion.seleccionarRol(username)
+            nombre_completo = Clasificacion.obtenerNombreCompleto(username)
+
+            if nombre_completo:
+                primer_nombre = Clasificacion.obtenerPrimerNombre(nombre_completo)
+
+                request.session['clasificacion'] = clasificacion
+
+                return render(request, 'homepage.html', {'username': primer_nombre})
+                return redirect('homepage')
+        else:
+            error_message = "Nombre de usuario o contraseña incorrectos"
+            return render(request, 'index.html', {'error_message': error_message})
+
+    return render(request, 'index.html')
+
 
 def VerFactura(request):
     facturas = Factura.objects.select_related('ID_CLIENTE_FACTURA', 'ID_PRODUCTO_FACTURA').all()

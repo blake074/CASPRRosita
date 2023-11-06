@@ -1,6 +1,8 @@
 from django.db import models
 from datetime import date
 from django.core.validators import MinValueValidator, MaxValueValidator
+import mysql.connector
+import hashlib
 
 # Create your models here.
 class Cliente(models.Model):
@@ -84,3 +86,52 @@ class Pedido(models.Model):
     FECHA_PEDIDO=models.DateField(default=date.today, verbose_name="Fecha en que se realizo el pedido",null=False);
     FECHA_PEDIDO_LLEGADA=models.DateField(default=date.today, verbose_name="Fecha en la que se espera que llegue el pedido",null=False);
     ESTADO_PEDIDO=models.CharField(max_length=1, verbose_name="Estado del pedido",null=False);
+
+class LoginManager:
+    @staticmethod
+    def login(username, password):
+        config = {
+            'user': 'root',
+            'host': 'localhost',
+            'database': 'papeleria'
+        }
+
+        conn = mysql.connector.connect(**config)
+        cursor = conn.cursor()
+
+        password_md5 = hashlib.md5(password.encode()).hexdigest()
+
+        query = "SELECT * FROM login WHERE usuario = %s AND contraseña = %s"
+        cursor.execute(query, (username, password_md5))
+
+        result = cursor.fetchone()
+
+        if result:
+            return True
+        else:
+            return False
+
+class Clasificacion:
+    @staticmethod
+    def seleccionarRol(username):
+        # Consultar la especialidad del usuario en la base de datos
+        config = {
+            'user': 'root',
+            'host': 'localhost',
+            'database': 'papeleria'
+        }
+
+        conn = mysql.connector.connect(**config)
+        cursor = conn.cursor()
+        query = "SELECT c.nombre_cargo, e.nombre_empleado FROM empleado e JOIN cargo c ON e.id_cargo = c.id_cargo WHERE e.codigo = %s"
+        cursor.execute(query, (username,))
+        result = cursor.fetchone()
+        cargo = result[0]
+
+        # Clasificar la especialidad del usuario
+        if ('líder' in cargo.lower()) or ('gerente' in cargo.lower()) or ('dba' in cargo.lower()):
+            return 'administracion'
+        elif 'director' in cargo.lower():
+            return 'supervision'
+        else:
+            return 'empleado'
