@@ -1,0 +1,49 @@
+{% extends "MenuPrincipal.html" %} 
+{% block titulo %} Pedidos {% endblock %}
+{% block contenido %} 
+<div class="card">
+    <div class="card-header">
+        <a name="" id="" class="btn btn-success" href="{% url 'CrearPedido' %}" role="button">Hacer un pedido</a>
+    </div>
+    <div class="card-body">
+        <h4 class="card-title">Pedidos</h4>
+        <div class="table-responsive">
+            <table class="table table-primary">
+                <thead>
+                    <tr>
+                        <th scope="col">ID del pedido</th>
+                        <th scope="col">Proveedor</th>
+                        <th scope="col">Producto</th>
+                        <th scope="col">Cantidad pedida</th>
+                        <th scope="col">Precio del pedido</th>
+                        <th scope="col">Fecha de realizacion</th>
+                        <th scope="col">Fecha de llegada</th>
+                        <th scope="col">Estado</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for formulario in pedido %}
+                        <td>{{ formulario.ID_PEDIDO }}</td>
+                        <td>{{ formulario.ID_PROVEEDOR_PEDIDO.NOMBRE_PROVEEDOR }}</td>
+                        <td>{{ formulario.ID_PRODUCTO_PEDIDO.DESCRIPCION_PRODUCTO }}</td>
+                        <td>{{ formulario.CANTIDAD_COMPRADA }}</td>
+                        <td>{{ formulario.PRECIO_TOTAL }}</td>
+                        <td>{{ formulario.FECHA_PEDIDO }}</td>
+                        <td>{{ formulario.FECHA_PEDIDO_LLEGADA }}</td>
+                        <td>{{ formulario.ESTADO_PEDIDO }}</td>
+                        <td><a name="" id="" class="btn btn-info" href="{% url 'EditarPedido' formulario.ID_PEDIDO %}" role="button">Editar</a></td>
+                        <td><a name="" id="" class="btn btn-danger" href="{% url 'BorrarPedido' formulario.ID_PEDIDO %}" role="button">Borrar</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+    <div class="card-footer text-muted">
+        
+    </div>
+</div>
+{% endblock %}

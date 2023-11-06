@@ -1,0 +1,48 @@
+{% extends "MenuPrincipal.html" %} 
+{% block titulo %} Editar cliente {% endblock %}
+{% block contenido %} 
+
+<div class="card">
+    <div class="card-header">
+        Editar la informacion de un cliente.
+    </div>
+    <div class="card-body">
+        <h4 class="card-title">Datos del cliente</h4>
+
+
+        <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            {% for campo in form %}
+                <div class="mb-3">
+                    <label for="{{ campo.id_for_label }}" class="form-label">{{ campo.label }}</label>
+                    
+                    {% if campo.name == 'TELEFONO_CLIENTE' %}
+                    <input type="{{ campo.field.widget.input_type }}" class="form-control" name="{{ campo.name }}" placeholder="{{ campo.label }}" pattern="[0-9]*" title="Solo se permiten numeros" value="{{ cliente.TELEFONO_CLIENTE }}">
+
+                    {% elif campo.name == 'CORREO_CLIENTE' %}
+                         <input type="{{ campo.field.widget.input_type }}" class="form-control" name="{{ campo.name }}" placeholder="{{ campo.label }}" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}" title="El Formato debe ser de correo electronico ejemplo@hotmail.com" value="{{ cliente.CORREO_CLIENTE }}">
+
+                     {% elif campo.name == 'NOMBRE_CLIENTE' %}
+                         <input type="{{ campo.field.widget.input_type }}" class="form-control" name="{{ campo.name }}" placeholder="{{ campo.label }}" pattern="[A-Za-z ñÑ]*" title="Solo se permiten letras" value="{{ cliente.NOMBRE_CLIENTE }}">
+
+                     {% elif campo.name  == 'APELLIDO_CLIENTE' %}
+                         <input type="{{ campo.field.widget.input_type }}" class="form-control" name="{{ campo.name }}" placeholder="{{ campo.label }}" pattern="[A-Za-z ñÑ]*" title="Solo se permiten letras" value="{{ cliente.APELLIDO_CLIENTE }}">
+
+                     {% elif campo.name  == 'DIRECCION_CLIENTE' %}
+                         <input type="{{ campo.field.widget.input_type }}" class="form-control" name="{{ campo.name }}" placeholder="{{ campo.label }}" value="{{ cliente.DIRECCION_CLIENTE }}">
+                    {% endif %}
+                </div>
+                <div class="col-12 help-text">{{ campo.errors }}</div>
+            {% endfor %}
+            <input type="submit" class="btn btn-success" value="Aceptar">
+        </form>
+
+
+
+    </div>
+    <div class="card-footer text-muted">
+        
+    </div>
+</div>
+
+{% endblock %}

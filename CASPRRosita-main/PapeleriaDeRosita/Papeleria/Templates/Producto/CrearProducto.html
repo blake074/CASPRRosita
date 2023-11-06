@@ -1,0 +1,44 @@
+{% extends "MenuPrincipal.html" %} 
+{% block titulo %} Añadir Producto {% endblock %}
+{% block contenido %} 
+
+<div class="card">
+    <div class="card-header">
+        Crear una nuevo producto.
+    </div>
+    <div class="card-body">
+        <h4 class="card-title">Datos del producto</h4>
+
+        <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            {% for campo in formulario %}
+                <div class="mb-3">
+                    <label for="{{ campo.id_for_label }}" class="form-label">{{ campo.label }}</label>
+                    
+                    {% if campo.name == 'ID_CATEGORIA_PRODUCTO' %}
+                        <select name="{{ campo.name }}" class="form-select">
+                            <option value="" selected>Selecciona una opción</option>
+                            {% for choice in campo.field.choices %}
+                                <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+                            {% endfor %}
+                        </select>
+
+                    {% elif campo.name == 'ESTADO_PRODUCTO' %}
+                         <input type="{{ campo.field.widget.input_type }}" class="form-control" name="{{ campo.name }}" placeholder="{{ campo.label }}" pattern="[AI]*" title="Solo se permite Activo (A) o Inactivo (I)">
+
+                    {% else %}
+                        <input type="{{ campo.field.widget.input_type }}" class="form-control" name="{{ campo.name }}" placeholder="{{ campo.label }}" pattern="[A-Za-z ñÑ]*" title="Solo se permiten letras (mayúsculas o minúsculas)">
+                    {% endif %}
+                </div>
+                <div class="col-12 help-text">{{ campo.errors }}</div>
+            {% endfor %}
+            <input type="submit" class="btn btn-success" value="Añadir">
+        </form>
+        
+    </div>
+    <div class="card-footer text-muted">
+        
+    </div>
+</div>
+
+{% endblock %}
