@@ -15,6 +15,12 @@ class Cliente(models.Model):
     def __str__(self):
         return self.NOMBRE_CLIENTE
 
+class Usuarios(models.Model):
+    usuario=models.AutoField(primary_key=True, verbose_name="Nombre se usuario", null=False);
+    contrasenia=models.AutoField(primary_key=True, verbose_name="Contraseña del usuario", null=False)
+    def __str__(self):
+        return self.usuario
+
 class Proveedor(models.Model):
     ID_PROVEEDOR=models.AutoField(primary_key=True, verbose_name="ID del proveedor");
     NOMBRE_PROVEEDOR=models.CharField(max_length=30, verbose_name="Nombre del proveedor", null=False);
@@ -101,7 +107,7 @@ class LoginManager:
 
         password_md5 = hashlib.md5(password.encode()).hexdigest()
 
-        query = "SELECT * FROM login WHERE usuario = %s AND contraseña = %s"
+        query = "SELECT * FROM usuarios WHERE usuario = %s AND contraseña = %s"
         cursor.execute(query, (username, password_md5))
 
         result = cursor.fetchone()
@@ -123,7 +129,7 @@ class Clasificacion:
 
         conn = mysql.connector.connect(**config)
         cursor = conn.cursor()
-        query = "SELECT c.nombre_cargo, e.nombre_empleado FROM empleado e JOIN cargo c ON e.id_cargo = c.id_cargo WHERE e.codigo = %s"
+        query = "SELECT e.usuario, e.contrasenia FROM usuario e WHERE e.codigo = %s"
         cursor.execute(query, (username,))
         result = cursor.fetchone()
         cargo = result[0]
@@ -131,7 +137,7 @@ class Clasificacion:
         # Clasificar la especialidad del usuario
         if ('líder' in cargo.lower()) or ('gerente' in cargo.lower()) or ('dba' in cargo.lower()):
             return 'administracion'
-        elif 'director' in cargo.lower():
+        elif 'ventas' in cargo.lower():
             return 'supervision'
         else:
             return 'empleado'
