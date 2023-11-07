@@ -4,6 +4,15 @@ from .models import *
 from django.core.validators import validate_email
 
 
+class LoginForm(forms.Form):
+    username = forms.CharField(label='Nombre de usuario', max_length=100)
+    password = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
+    
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({'class': 'form-control'})
+        self.fields['password'].widget.attrs.update({'class': 'form-control'})
+
 class FacturaForm(forms.ModelForm):
     class Meta:
         model= Factura

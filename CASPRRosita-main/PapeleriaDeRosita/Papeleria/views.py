@@ -1,39 +1,30 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-
+from django.contrib.auth import authenticate, login
 from .models import *
 from .forms import *
 
 
 # Create your views here.
 
+def InicioS(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('Principal')
+    else:
+        form = LoginForm()
+
+    return render(request, 'inicioS.html', {'form': form})     
+
+
 def Inicio(request):
     return render(request, 'MenuPrincipal.html')
-
-@csrf_protect
-def login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        if LoginManager.login(username, password):
-            # Obtener el código del usuario y autenticar el login
-
-            clasificacion = Clasificacion.seleccionarRol(username)
-            nombre_completo = Clasificacion.obtenerNombreCompleto(username)
-
-            if nombre_completo:
-                primer_nombre = Clasificacion.obtenerPrimerNombre(nombre_completo)
-
-                request.session['clasificacion'] = clasificacion
-
-                return render(request, 'homepage.html', {'username': primer_nombre})
-                return redirect('homepage')
-        else:
-            error_message = "Nombre de usuario o contraseña incorrectos"
-            return render(request, 'index.html', {'error_message': error_message})
-
-    return render(request, 'index.html')
 
 
 def VerFactura(request):
