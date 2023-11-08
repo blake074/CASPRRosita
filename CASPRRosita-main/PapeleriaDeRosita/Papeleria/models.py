@@ -13,14 +13,6 @@ class Cliente(models.Model):
     def __str__(self):
         return self.NOMBRE_CLIENTE
 
-class Usuarios(models.Model):
-
-    id_usuario=models.AutoField(primary_key=True, verbose_name="ID del usuario");
-    usuario=models.CharField(max_length=30, verbose_name="Nombre del usuario", null=False);
-    contrasenia=models.CharField(max_length=30, verbose_name="Contraseña del usuario", null=False);
-    def __str__(self):
-        return self.usuario
-
 class Proveedor(models.Model):
     ID_PROVEEDOR=models.AutoField(primary_key=True, verbose_name="ID del proveedor");
     NOMBRE_PROVEEDOR=models.CharField(max_length=30, verbose_name="Nombre del proveedor", null=False);
@@ -92,6 +84,3 @@ class Pedido(models.Model):
     FECHA_PEDIDO=models.DateField(default=date.today, verbose_name="Fecha en que se realizo el pedido",null=False);
     FECHA_PEDIDO_LLEGADA=models.DateField(default=date.today, verbose_name="Fecha en la que se espera que llegue el pedido",null=False);
     ESTADO_PEDIDO=models.CharField(max_length=1, verbose_name="Estado del pedido",null=False);
-
-
-

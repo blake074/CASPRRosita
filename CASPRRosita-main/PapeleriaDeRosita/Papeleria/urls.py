@@ -1,10 +1,17 @@
 from django.urls import path
 from . import views
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
-    path ('', views.InicioS, name='InicioS'),
 
-    path ('MenuPrincipal', views.Inicio, name='MenuPrincipal'),
+    path ('', views.InicioS, name='InicioSesion'),
+    path('CerrarSesion', views.CerrarSesion, name='CerrarSesion'),
+
+
+
+    path ('MenuPrincipal',views.Inicio, name='MenuPrincipal'),
 
     path ('VerFactura', views.VerFactura, name='VerFactura'),
     path ('CrearFactura', views.CrearFactura, name='CrearFactura'),
