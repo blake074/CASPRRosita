@@ -1,0 +1,95 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #F6D5F7;
+  /*background: linear-gradient(200deg, #E598B9, #C6E3F9);
+  height: 100vh;*/
+  /*background-color: #AEA8EE*/;
+  /*background-color: #A8CAEE;*/
+
+}
+
+.formulario {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 380px;
+  width: 500px;
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.formulario h1{
+  text-align: center;
+  padding: 0 0 10px 0;
+  border-bottom: 1px solid silver;
+}
+.card-body h5{
+  text-align: left;
+  padding: 0 0 5px 0;
+}
+
+.formulario form{
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.formulario input{
+    width: 80%;
+    padding: 5px;
+    height: 32px;
+    font-size: 15px;
+    border: none;
+    background: none;
+    outline: none;
+    border-bottom: 1px solid #283747;
+}
+
+.formulario label {
+    color: #34495E;
+    font-size: 16px;
+    pointer-events: none;
+}
+.formulario .usuario,
+.formulario .contraseña {
+    margin: 30px 0;
+    position: relative;
+    border-bottom: 1px solid #283747;
+}
+
+.formulario .usuario input,
+.formulario .contraseña input {
+    padding-left: 10px;
+
+}
+
+.formulario .usuario label,
+.formulario .contraseña label {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+}
+
+.btn-primary{
+  position: absolute;
+  top: 80%;
+  left: 15%;
+  width: 65%;
+  height: 50px;
+  border: 1px solid;
+  background: #4e9ca9;
+  border-radius: 25px;
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+  outline: none;
+}
+
+.btn-primary:hover{
+  border-color: black;
+  opacity: 0.8;
+  transition: .5s;
+}
