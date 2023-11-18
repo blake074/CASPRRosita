@@ -41,6 +41,10 @@ urlpatterns = [
     path ('BorrarPedido/<int:ID_PEDIDO>',views.BorrarPedido, name='BorrarPedido'),
     path ('EditarPedido/<int:ID_PEDIDO>',views.EditarPedido, name='EditarPedido'),
 
+    path ('InformeVentas', views.InformeVentas, name='InformeVentas'),
+    path ('InformePedidos', views.InformePedidos, name='InformePedidos'),
 
+    path ('InformePedidosPDF', views.InformePedidosPDF, name='InformePedidosPDF'),
+    path ('InformeVentasPDF', views.InformeVentasPDF, name='InformeVentasPDF'),
 
 ]

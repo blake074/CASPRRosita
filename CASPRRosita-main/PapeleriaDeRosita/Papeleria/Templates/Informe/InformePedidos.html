@@ -1,0 +1,24 @@
+{% extends "MenuPrincipal.html" %} 
+{% block titulo %} InformePedidos {% endblock %}
+{% block contenido %} 
+<div class="card">
+    <div class="card-header">
+        <a name="" id="" class="btn btn-success" href="{% url 'InformePedidosPDF' %}" role="button">Descargar Informe</a>
+    </div>
+    <div class="card-body">
+        <h4 class="card-title">Datos de los pedidos</h4>
+
+        <img src="data:image/png;base64,{{ image_base64 }}" alt="Prueba">
+        
+        <img src="data:image/png;base64,{{ image_prod }}" alt="Prueba">
+
+        <img src="data:image/png;base64,{{ imagenPorProveedor }}" alt="Prueba">
+
+        <img src="data:image/png;base64,{{ imagenPorProducto }}" alt="Prueba">
+
+    </div>
+    <div class="card-footer text-muted">
+        
+    </div>
+</div>
+{% endblock %}

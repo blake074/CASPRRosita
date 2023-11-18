@@ -5,7 +5,22 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.base import TemplateView
 from django.contrib.auth import logout
 from django.views import View
+from django.db.models import Count
+from django.db.models import Sum
 
+from datetime import datetime
+
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.utils import ImageReader
+import tempfile
+from reportlab.pdfgen import canvas
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.pyplot as pltprod
+import matplotlib
+matplotlib.use('Agg') 
+import io
+import base64
 
 from .models import *
 from .forms import *
@@ -223,3 +238,399 @@ def EditarPedido(request, ID_PEDIDO):
     else:
         form = PedidoForm(instance=prov)
     return render(request, 'Pedido/EditarPedido.html', {'form': form, 'prov': prov}) 
+
+@user_passes_test(usuarioRosita)
+def InformeVentas(request):
+
+    resultados = Factura.objects.values('ID_CLIENTE_FACTURA__NOMBRE_CLIENTE').annotate(cantidad_facturas=Count('ID_CLIENTE_FACTURA'))
+
+    resultadosproducto = Factura.objects.values('ID_PRODUCTO_FACTURA__DESCRIPCION_PRODUCTO').annotate(cantidad_productos=Count('ID_PRODUCTO_FACTURA'))
+
+    df_resultados = pd.DataFrame(resultados)
+
+    df_resultadosproducto = pd.DataFrame(resultadosproducto)
+
+    # Crear la primera gráfica
+    plt.figure(figsize=(8, 4))
+    plt.bar(df_resultados['ID_CLIENTE_FACTURA__NOMBRE_CLIENTE'], df_resultados['cantidad_facturas'])
+    plt.xlabel('Cliente')
+    plt.ylabel('Cantidad de Facturas')
+    plt.title('Ventas por Cliente')
+
+    # Guardar la primera gráfica en un buffer
+    buffer1 = io.BytesIO()
+    plt.savefig(buffer1, format='png')
+    buffer1.seek(0)
+    image_base64 = base64.b64encode(buffer1.read()).decode('utf-8')
+
+    # Crear la segunda gráfica
+    plt.figure(figsize=(8, 4))
+    plt.bar(df_resultadosproducto['ID_PRODUCTO_FACTURA__DESCRIPCION_PRODUCTO'], df_resultadosproducto['cantidad_productos'])
+    plt.xlabel('Producto')
+    plt.ylabel('Ventas por producto')
+    plt.title('Ventas por Producto')
+
+    # Guardar la segunda gráfica en un buffer
+    buffer2 = io.BytesIO()
+    plt.savefig(buffer2, format='png')
+    buffer2.seek(0)
+    image_prod = base64.b64encode(buffer2.read()).decode('utf-8')
+
+
+    resultadosPorProveedor = Factura.objects.values('ID_CLIENTE_FACTURA__NOMBRE_CLIENTE').annotate(total_precios=Sum('TOTAL_FACTURA'))
+
+    resultadosPorProducto = Factura.objects.values('ID_PRODUCTO_FACTURA__DESCRIPCION_PRODUCTO').annotate(total_precios=Sum('TOTAL_FACTURA'))
+
+    proveedores = [resultado['ID_CLIENTE_FACTURA__NOMBRE_CLIENTE'] for resultado in resultadosPorProveedor]
+    total_precios = [resultado['total_precios'] for resultado in resultadosPorProveedor]
+    plt.figure(figsize=(8, 8))
+    plt.pie(total_precios, labels=proveedores, autopct=lambda p: '{:.1f}% ({:.0f})'.format(p, p * sum(total_precios) / 100), startangle=140)
+
+    plt.title('Distribución de compras por cliente')
+
+    buffer3 = io.BytesIO()
+    plt.savefig(buffer3, format='png')
+    buffer3.seek(0)
+    imagenPorProveedor = base64.b64encode(buffer3.read()).decode('utf-8')
+
+
+    proveedores = [resultado['ID_PRODUCTO_FACTURA__DESCRIPCION_PRODUCTO'] for resultado in resultadosPorProducto]
+    total_precios = [resultado['total_precios'] for resultado in resultadosPorProducto]
+    plt.figure(figsize=(8, 8))
+    plt.pie(total_precios, labels=proveedores, autopct=lambda p: '{:.1f}% ({:.0f})'.format(p, p * sum(total_precios) / 100), startangle=140)
+
+    plt.title('Distribución de compras por producto')
+
+    buffer4 = io.BytesIO()
+    plt.savefig(buffer4, format='png')
+    buffer4.seek(0)
+    imagenPorProducto = base64.b64encode(buffer4.read()).decode('utf-8')
+
+    return render(request, 'Informe/InformeVentas.html', {'imagenPorProducto':imagenPorProducto, 'imagenPorProveedor':imagenPorProveedor, 'image_base64':image_base64, 'image_prod':image_prod} ) 
+
+
+@user_passes_test(usuarioRosita)
+def InformeVentasPDF(request):
+
+    resultados = Factura.objects.values('ID_CLIENTE_FACTURA__NOMBRE_CLIENTE').annotate(cantidad_facturas=Count('ID_CLIENTE_FACTURA'))
+
+    resultadosproducto = Factura.objects.values('ID_PRODUCTO_FACTURA__DESCRIPCION_PRODUCTO').annotate(cantidad_productos=Count('ID_PRODUCTO_FACTURA'))
+
+    df_resultados = pd.DataFrame(resultados)
+
+    df_resultadosproducto = pd.DataFrame(resultadosproducto)
+
+    # Crear la primera gráfica
+    plt.figure(figsize=(8, 4))
+    plt.bar(df_resultados['ID_CLIENTE_FACTURA__NOMBRE_CLIENTE'], df_resultados['cantidad_facturas'])
+    plt.xlabel('Cliente')
+    plt.ylabel('Cantidad de Facturas')
+    plt.title('Ventas por Cliente')
+
+    # Guardar la primera gráfica en un buffer
+    buffer1 = io.BytesIO()
+    plt.savefig(buffer1, format='png')
+    buffer1.seek(0)
+    image_base64 = base64.b64encode(buffer1.read()).decode('utf-8')
+
+    # Crear la segunda gráfica
+    plt.figure(figsize=(8, 4))
+    plt.bar(df_resultadosproducto['ID_PRODUCTO_FACTURA__DESCRIPCION_PRODUCTO'], df_resultadosproducto['cantidad_productos'])
+    plt.xlabel('Producto')
+    plt.ylabel('Ventas por producto')
+    plt.title('Ventas por Producto')
+
+    # Guardar la segunda gráfica en un buffer
+    buffer2 = io.BytesIO()
+    plt.savefig(buffer2, format='png')
+    buffer2.seek(0)
+    image_prod = base64.b64encode(buffer2.read()).decode('utf-8')
+
+
+    resultadosPorProveedor = Factura.objects.values('ID_CLIENTE_FACTURA__NOMBRE_CLIENTE').annotate(total_precios=Sum('TOTAL_FACTURA'))
+
+    resultadosPorProducto = Factura.objects.values('ID_PRODUCTO_FACTURA__DESCRIPCION_PRODUCTO').annotate(total_precios=Sum('TOTAL_FACTURA'))
+
+    proveedores = [resultado['ID_CLIENTE_FACTURA__NOMBRE_CLIENTE'] for resultado in resultadosPorProveedor]
+    total_precios = [resultado['total_precios'] for resultado in resultadosPorProveedor]
+    plt.figure(figsize=(8, 8))
+    plt.pie(total_precios, labels=proveedores, autopct=lambda p: '{:.1f}% ({:.0f})'.format(p, p * sum(total_precios) / 100), startangle=140)
+
+    plt.title('Distribución de compras por cliente')
+
+    buffer3 = io.BytesIO()
+    plt.savefig(buffer3, format='png')
+    buffer3.seek(0)
+    imagenPorProveedor = base64.b64encode(buffer3.read()).decode('utf-8')
+
+
+    proveedores = [resultado['ID_PRODUCTO_FACTURA__DESCRIPCION_PRODUCTO'] for resultado in resultadosPorProducto]
+    total_precios = [resultado['total_precios'] for resultado in resultadosPorProducto]
+    plt.figure(figsize=(8, 8))
+    plt.pie(total_precios, labels=proveedores, autopct=lambda p: '{:.1f}% ({:.0f})'.format(p, p * sum(total_precios) / 100), startangle=140)
+
+    plt.title('Distribución de compras por producto')
+
+    buffer4 = io.BytesIO()
+    plt.savefig(buffer4, format='png')
+    buffer4.seek(0)
+    imagenPorProducto = base64.b64encode(buffer4.read()).decode('utf-8')
+
+    # Obtener la fecha actual
+    fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Crear un objeto PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="InformeDeVentas{fecha_actual}.pdf"'
+
+    # Crear el documento PDF con ReportLab
+    pdf = canvas.Canvas(response)
+
+    # Guardar las imágenes en archivos temporales
+    temp_image_base64 = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+    temp_image_prod = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+    temp_imagenPorProveedor = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+    temp_imagenPorProducto = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+
+    with open(temp_image_base64.name, 'wb') as img_file:
+        img_file.write(base64.b64decode(image_base64))
+
+    with open(temp_image_prod.name, 'wb') as img_file:
+        img_file.write(base64.b64decode(image_prod))
+
+    with open(temp_imagenPorProveedor.name, 'wb') as img_file:
+        img_file.write(base64.b64decode(imagenPorProveedor))
+
+    with open(temp_imagenPorProducto.name, 'wb') as img_file:
+        img_file.write(base64.b64decode(imagenPorProducto))
+
+    # Añadir las imágenes al documento PDF con ReportLab
+
+    title = "Informe de ventas."
+    title_width = pdf.stringWidth(title, "Helvetica", 16)
+    pdf.setFont("Helvetica", 16)
+    pdf.drawString((letter[0] - title_width) / 2, 800, title)
+
+    pdf.drawString(100, 700, "Ventas por cliente")
+    pdf.drawImage(ImageReader(temp_image_base64.name), 100, 450, width=400, height=200)
+
+    pdf.drawString(100, 400, "Ventas por Producto")
+    pdf.drawImage(ImageReader(temp_image_prod.name), 100, 150, width=400, height=200)
+
+    # Cambiar a una nueva página
+    pdf.showPage()
+
+    pdf.drawString(100, 450, "Distribución de compras por clientes")
+    pdf.drawImage(ImageReader(temp_imagenPorProveedor.name), 100, 350, width=400, height=400)
+
+    pdf.drawString(100, 100, "Distribución de compras por producto")
+    pdf.drawImage(ImageReader(temp_imagenPorProducto.name), 100, 10, width=400, height=400)
+
+    pdf.save()
+
+    # Cerrar y eliminar archivos temporales
+    temp_image_base64.close()
+    temp_image_prod.close()
+    temp_imagenPorProveedor.close()
+
+    return response
+
+
+
+
+
+
+
+@user_passes_test(usuarioRosita)
+def InformePedidos(request):
+
+    resultados = Pedido.objects.values('ID_PROVEEDOR_PEDIDO__NOMBRE_PROVEEDOR').annotate(cantidad_facturas=Count('ID_PROVEEDOR_PEDIDO'))
+
+    resultadosproducto = Pedido.objects.values('ID_PRODUCTO_PEDIDO__DESCRIPCION_PRODUCTO').annotate(cantidad_productos=Count('ID_PRODUCTO_PEDIDO'))
+
+    df_resultados = pd.DataFrame(resultados)
+
+    df_resultadosproducto = pd.DataFrame(resultadosproducto)
+
+    # Crear la primera gráfica
+    plt.figure(figsize=(8, 4))
+    plt.bar(df_resultados['ID_PROVEEDOR_PEDIDO__NOMBRE_PROVEEDOR'], df_resultados['cantidad_facturas'])
+    plt.xlabel('Proveedor')
+    plt.ylabel('Cantidad de pedidos')
+    plt.title('Pedidos por proveedor')
+
+    # Guardar la primera gráfica en un buffer
+    buffer1 = io.BytesIO()
+    plt.savefig(buffer1, format='png')
+    buffer1.seek(0)
+    image_base64 = base64.b64encode(buffer1.read()).decode('utf-8')
+
+    # Crear la segunda gráfica
+    plt.figure(figsize=(8, 4))
+    plt.bar(df_resultadosproducto['ID_PRODUCTO_PEDIDO__DESCRIPCION_PRODUCTO'], df_resultadosproducto['cantidad_productos'])
+    plt.xlabel('Producto')
+    plt.ylabel('Numero de Pedidos')
+    plt.title('pedidos por producto')
+
+    # Guardar la segunda gráfica en un buffer
+    buffer2 = io.BytesIO()
+    plt.savefig(buffer2, format='png')
+    buffer2.seek(0)
+    image_prod = base64.b64encode(buffer2.read()).decode('utf-8')
+
+    
+    resultadosPorProveedor = Pedido.objects.values('ID_PROVEEDOR_PEDIDO__NOMBRE_PROVEEDOR').annotate(total_precios=Sum('PRECIO_TOTAL'))
+    
+    resultadosPorProducto = Pedido.objects.values('ID_PRODUCTO_PEDIDO__DESCRIPCION_PRODUCTO').annotate(total_precios=Sum('PRECIO_TOTAL'))
+    
+    # Extrae los datos para el gráfico
+    proveedores = [resultado['ID_PROVEEDOR_PEDIDO__NOMBRE_PROVEEDOR'] for resultado in resultadosPorProveedor]
+    total_precios = [resultado['total_precios'] for resultado in resultadosPorProveedor]
+    # Crea el gráfico de torta
+    plt.figure(figsize=(8, 8))
+    plt.pie(total_precios, labels=proveedores, autopct=lambda p: '{:.1f}% ({:.0f})'.format(p, p * sum(total_precios) / 100), startangle=140)
+ #   plt.pie(total_precios, labels=proveedores, autopct='%1.1f%%', startangle=140)
+    # Añade un título
+    plt.title('Distribución de precios por proveedor')
+
+    buffer3 = io.BytesIO()
+    plt.savefig(buffer3, format='png')
+    buffer3.seek(0)
+    imagenPorProveedor = base64.b64encode(buffer3.read()).decode('utf-8')
+
+
+    proveedores = [resultado['ID_PRODUCTO_PEDIDO__DESCRIPCION_PRODUCTO'] for resultado in resultadosPorProducto]
+    total_precios = [resultado['total_precios'] for resultado in resultadosPorProducto]
+    plt.figure(figsize=(8, 8))
+    plt.pie(total_precios, labels=proveedores, autopct=lambda p: '{:.1f}% ({:.0f})'.format(p, p * sum(total_precios) / 100), startangle=140)
+
+    plt.title('Distribución de precios por producto')
+
+    buffer4 = io.BytesIO()
+    plt.savefig(buffer4, format='png')
+    buffer4.seek(0)
+    imagenPorProducto = base64.b64encode(buffer4.read()).decode('utf-8')
+
+    return render(request, 'Informe/InformePedidos.html', {'imagenPorProducto':imagenPorProducto, 'imagenPorProveedor':imagenPorProveedor, 'image_base64':image_base64, 'image_prod':image_prod} ) 
+
+@user_passes_test(usuarioRosita)
+def InformePedidosPDF(request):
+
+    resultados = Pedido.objects.values('ID_PROVEEDOR_PEDIDO__NOMBRE_PROVEEDOR').annotate(cantidad_facturas=Count('ID_PROVEEDOR_PEDIDO'))
+
+    resultadosproducto = Pedido.objects.values('ID_PRODUCTO_PEDIDO__DESCRIPCION_PRODUCTO').annotate(cantidad_productos=Count('ID_PRODUCTO_PEDIDO'))
+
+    df_resultados = pd.DataFrame(resultados)
+
+    df_resultadosproducto = pd.DataFrame(resultadosproducto)
+
+    plt.figure(figsize=(8, 4))
+    plt.bar(df_resultados['ID_PROVEEDOR_PEDIDO__NOMBRE_PROVEEDOR'], df_resultados['cantidad_facturas'])
+    plt.xlabel('Proveedor')
+    plt.ylabel('Cantidad de pedidos')
+    plt.title('Pedidos por proveedor')
+
+    buffer1 = io.BytesIO()
+    plt.savefig(buffer1, format='png')
+    buffer1.seek(0)
+    image_base64 = base64.b64encode(buffer1.read()).decode('utf-8')
+
+    plt.figure(figsize=(8, 4))
+    plt.bar(df_resultadosproducto['ID_PRODUCTO_PEDIDO__DESCRIPCION_PRODUCTO'], df_resultadosproducto['cantidad_productos'])
+    plt.xlabel('Producto')
+    plt.ylabel('Numero de Pedidos')
+    plt.title('pedidos por producto')
+
+    buffer2 = io.BytesIO()
+    plt.savefig(buffer2, format='png')
+    buffer2.seek(0)
+    image_prod = base64.b64encode(buffer2.read()).decode('utf-8')
+
+    
+    resultadosPorProveedor = Pedido.objects.values('ID_PROVEEDOR_PEDIDO__NOMBRE_PROVEEDOR').annotate(total_precios=Sum('PRECIO_TOTAL'))
+    
+    resultadosPorProducto = Pedido.objects.values('ID_PRODUCTO_PEDIDO__DESCRIPCION_PRODUCTO').annotate(total_precios=Sum('PRECIO_TOTAL'))
+    
+    proveedores = [resultado['ID_PROVEEDOR_PEDIDO__NOMBRE_PROVEEDOR'] for resultado in resultadosPorProveedor]
+    total_precios = [resultado['total_precios'] for resultado in resultadosPorProveedor]
+
+    plt.figure(figsize=(8, 8))
+    plt.pie(total_precios, labels=proveedores, autopct=lambda p: '{:.1f}% ({:.0f})'.format(p, p * sum(total_precios) / 100), startangle=140)
+
+    plt.title('Distribución de precios por proveedor')
+
+    buffer3 = io.BytesIO()
+    plt.savefig(buffer3, format='png')
+    buffer3.seek(0)
+    imagenPorProveedor = base64.b64encode(buffer3.read()).decode('utf-8')
+
+
+    proveedores = [resultado['ID_PRODUCTO_PEDIDO__DESCRIPCION_PRODUCTO'] for resultado in resultadosPorProducto]
+    total_precios = [resultado['total_precios'] for resultado in resultadosPorProducto]
+    plt.figure(figsize=(8, 8))
+    plt.pie(total_precios, labels=proveedores, autopct=lambda p: '{:.1f}% ({:.0f})'.format(p, p * sum(total_precios) / 100), startangle=140)
+
+    plt.title('Distribución de precios por producto')
+
+    buffer4 = io.BytesIO()
+    plt.savefig(buffer4, format='png')
+    buffer4.seek(0)
+    imagenPorProducto = base64.b64encode(buffer4.read()).decode('utf-8')
+
+    # Obtener la fecha actual
+    fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # Crear un objeto PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="InformeDePedidos{fecha_actual}.pdf"'
+
+    # Crear el documento PDF con ReportLab
+    pdf = canvas.Canvas(response)
+
+    # Guardar las imágenes en archivos temporales
+    temp_image_base64 = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+    temp_image_prod = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+    temp_imagenPorProveedor = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+    temp_imagenPorProducto = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+
+    with open(temp_image_base64.name, 'wb') as img_file:
+        img_file.write(base64.b64decode(image_base64))
+
+    with open(temp_image_prod.name, 'wb') as img_file:
+        img_file.write(base64.b64decode(image_prod))
+
+    with open(temp_imagenPorProveedor.name, 'wb') as img_file:
+        img_file.write(base64.b64decode(imagenPorProveedor))
+
+    with open(temp_imagenPorProducto.name, 'wb') as img_file:
+        img_file.write(base64.b64decode(imagenPorProducto))
+
+    # Añadir las imágenes al documento PDF con ReportLab
+
+    title = "Informe de compras a proveedores."
+    title_width = pdf.stringWidth(title, "Helvetica", 16)
+    pdf.setFont("Helvetica", 16)
+    pdf.drawString((letter[0] - title_width) / 2, 800, title)
+
+    pdf.drawString(100, 700, "Compras por Proveedor")
+    pdf.drawImage(ImageReader(temp_image_base64.name), 100, 450, width=400, height=200)
+
+    pdf.drawString(100, 400, "Compras por Producto")
+    pdf.drawImage(ImageReader(temp_image_prod.name), 100, 150, width=400, height=200)
+
+    # Cambiar a una nueva página
+    pdf.showPage()
+
+    pdf.drawString(100, 450, "Distribución de precios por proveedor")
+    pdf.drawImage(ImageReader(temp_imagenPorProveedor.name), 100, 350, width=400, height=400)
+
+    pdf.drawString(100, 100, "Distribución de precios por producto")
+    pdf.drawImage(ImageReader(temp_imagenPorProducto.name), 100, 10, width=400, height=400)
+
+    pdf.save()
+
+    # Cerrar y eliminar archivos temporales
+    temp_image_base64.close()
+    temp_image_prod.close()
+    temp_imagenPorProveedor.close()
+
+    return response
