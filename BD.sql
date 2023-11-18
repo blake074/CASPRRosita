@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `papeleria` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `papeleria`;
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: localhost    Database: papeleria
@@ -118,7 +116,7 @@ CREATE TABLE `auth_user` (
   `date_joined` datetime(6) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,6 +125,7 @@ CREATE TABLE `auth_user` (
 
 LOCK TABLES `auth_user` WRITE;
 /*!40000 ALTER TABLE `auth_user` DISABLE KEYS */;
+INSERT INTO `auth_user` VALUES (1,'pbkdf2_sha256$260000$bzjdAj1YWxjN7UPx5sHDNu$DmZh4t3BAaJCqyQ14bI59GU2pOjLvXiIiOEz8BCuilY=','2023-11-08 01:25:45.146131',1,'Admin','','','Admin@gmail.com',1,1,'2023-11-07 23:35:17.067706'),(2,'pbkdf2_sha256$260000$56QLrvXe1OpiZPuUDudjHt$LfDrTmOKC36AeoOmhHT2/gOZY0l/9+TlTd9tfaGq1EA=','2023-11-15 23:22:55.031402',0,'Rosita','','','',0,1,'2023-11-07 23:39:24.000000'),(3,'pbkdf2_sha256$260000$8ALac381rnfY1tKZ3EL0Av$n94A7T7H/222kq19B+f3yfkPbekwOWxwX/CFGA/FSrI=','2023-11-08 01:46:33.573860',0,'Gladys','','','',0,1,'2023-11-07 23:41:48.000000');
 /*!40000 ALTER TABLE `auth_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -208,7 +207,7 @@ CREATE TABLE `django_admin_log` (
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`),
   CONSTRAINT `django_admin_log_chk_1` CHECK ((`action_flag` >= 0))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -217,6 +216,7 @@ CREATE TABLE `django_admin_log` (
 
 LOCK TABLES `django_admin_log` WRITE;
 /*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
+INSERT INTO `django_admin_log` VALUES (1,'2023-11-07 23:39:24.598107','2','Rosita',1,'[{\"added\": {}}]',4,1),(2,'2023-11-07 23:39:57.317313','2','Rosita',2,'[]',4,1),(3,'2023-11-07 23:40:13.286355','2','Rosita',2,'[]',4,1),(4,'2023-11-07 23:41:48.908622','3','Gladys',1,'[{\"added\": {}}]',4,1),(5,'2023-11-07 23:41:51.675448','3','Gladys',2,'[]',4,1);
 /*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -294,6 +294,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
+INSERT INTO `django_session` VALUES ('ul1m5z6x9utjqxxbzttigu1aswfn6p1a','.eJxVjMEOwiAQBf-FsyHAAgWP3v0GssAiVQNJaU_Gf9cmPej1zcx7sYDbWsM2aAlzZmem2Ol3i5ge1HaQ79hunafe1mWOfFf4QQe_9kzPy-H-HVQc9VuX5Eq2pqjJgPTaS6UnUF5YK0lYLyJ4TEU7tOicEIYAHOhsDFAUUXv2_gC2nTaR:1r3PDj:XAyOW2jyynG1lbbSFveETFUQqrp0m4DD21Xo0qbFnOE','2023-11-29 23:22:55.285031'),('yguvx55ocnkbnyp2ajjtoatkafet9wkp','.eJxVjMEOwiAQBf-FsyHAAgWP3v0GssAiVQNJaU_Gf9cmPej1zcx7sYDbWsM2aAlzZmem2Ol3i5ge1HaQ79hunafe1mWOfFf4QQe_9kzPy-H-HVQc9VuX5Eq2pqjJgPTaS6UnUF5YK0lYLyJ4TEU7tOicEIYAHOhsDFAUUXv2_gC2nTaR:1r0VjL:NKAjpT6MBF9B_n6BCLYq6dKI8iI1_7kKcySQnPWFdck','2023-11-21 23:43:35.802920');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -309,7 +310,7 @@ CREATE TABLE `papeleria_categoria` (
   `DESCRIPCION_CATEGORIA` varchar(30) NOT NULL,
   `ESTADO_PRODUCTO` varchar(1) NOT NULL,
   PRIMARY KEY (`ID_CATEGORIA`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -318,7 +319,7 @@ CREATE TABLE `papeleria_categoria` (
 
 LOCK TABLES `papeleria_categoria` WRITE;
 /*!40000 ALTER TABLE `papeleria_categoria` DISABLE KEYS */;
-INSERT INTO `papeleria_categoria` VALUES (1,'Juguete','A'),(2,'Cuaderno','A'),(3,'Papel','A');
+INSERT INTO `papeleria_categoria` VALUES (1,'Juguete','A'),(2,'Cuaderno','A'),(3,'Papel','A'),(5,'Aseo','A'),(6,'Dulces','A');
 /*!40000 ALTER TABLE `papeleria_categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -337,7 +338,7 @@ CREATE TABLE `papeleria_cliente` (
   `TELEFONO_CLIENTE` varchar(30) NOT NULL,
   `CORREO_CLIENTE` varchar(30) NOT NULL,
   PRIMARY KEY (`ID_CLIENTE`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -346,7 +347,7 @@ CREATE TABLE `papeleria_cliente` (
 
 LOCK TABLES `papeleria_cliente` WRITE;
 /*!40000 ALTER TABLE `papeleria_cliente` DISABLE KEYS */;
-INSERT INTO `papeleria_cliente` VALUES (1,'Jose','Jimenez','cra 26','3920193842','jose@gmail.com');
+INSERT INTO `papeleria_cliente` VALUES (3,'Rafael','Pulido','calle 26','3194970211','fatita@gmail.com'),(4,'Tomas','Acuña','cra 26','12323423423','Tomas@gmail.com'),(5,'David','rodriguez','calle 153','304958203','mono@gmail.com'),(6,'Jose','Jimenez','calle 134','3950395012','jose@gmail.com');
 /*!40000 ALTER TABLE `papeleria_cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -371,7 +372,7 @@ CREATE TABLE `papeleria_factura` (
   KEY `Papeleria_factura_ID_PRODUCTO_FACTURA__db93f0be_fk_Papeleria` (`ID_PRODUCTO_FACTURA_id`),
   CONSTRAINT `Papeleria_factura_ID_CLIENTE_FACTURA_i_16044f63_fk_Papeleria` FOREIGN KEY (`ID_CLIENTE_FACTURA_id`) REFERENCES `papeleria_cliente` (`ID_CLIENTE`),
   CONSTRAINT `Papeleria_factura_ID_PRODUCTO_FACTURA__db93f0be_fk_Papeleria` FOREIGN KEY (`ID_PRODUCTO_FACTURA_id`) REFERENCES `papeleria_producto` (`ID_PRODUCTO`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -380,7 +381,7 @@ CREATE TABLE `papeleria_factura` (
 
 LOCK TABLES `papeleria_factura` WRITE;
 /*!40000 ALTER TABLE `papeleria_factura` DISABLE KEYS */;
-INSERT INTO `papeleria_factura` VALUES (1,2,8000,10000,0.00,'2023-11-05',1,2),(2,5,20000,25000,0.00,'2023-11-05',1,2);
+INSERT INTO `papeleria_factura` VALUES (3,1,8000,10000,0.00,'2023-11-15',3,1),(4,3,5000,6000,0.00,'2023-11-15',4,5),(5,5,2000,2500,0.00,'2023-11-15',5,4),(6,2,8000,10000,0.00,'2023-11-15',3,2),(7,1,9000,10000,0.00,'2023-11-15',5,1),(8,20,18000,20000,0.00,'2023-11-15',6,3);
 /*!40000 ALTER TABLE `papeleria_factura` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -400,7 +401,7 @@ CREATE TABLE `papeleria_movimientoproducto` (
   PRIMARY KEY (`ID_MOVIMIENTO`),
   KEY `Papeleria_movimiento_ID_PRODUCTO_MOVIMIEN_0e1028c5_fk_Papeleria` (`ID_PRODUCTO_MOVIMIENTO_id`),
   CONSTRAINT `Papeleria_movimiento_ID_PRODUCTO_MOVIMIEN_0e1028c5_fk_Papeleria` FOREIGN KEY (`ID_PRODUCTO_MOVIMIENTO_id`) REFERENCES `papeleria_producto` (`ID_PRODUCTO`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -409,7 +410,7 @@ CREATE TABLE `papeleria_movimientoproducto` (
 
 LOCK TABLES `papeleria_movimientoproducto` WRITE;
 /*!40000 ALTER TABLE `papeleria_movimientoproducto` DISABLE KEYS */;
-INSERT INTO `papeleria_movimientoproducto` VALUES (12,'Compra a proveedor',10,'2023-11-05',1),(13,'Venta a cliente',5,'2023-11-05',2),(14,'Compra a proveedor',7,'2023-11-05',2),(15,'Compra a proveedor',20,'2023-11-05',3);
+INSERT INTO `papeleria_movimientoproducto` VALUES (12,'Compra a proveedor',10,'2023-11-05',1),(13,'Venta a cliente',5,'2023-11-05',2),(14,'Compra a proveedor',7,'2023-11-05',2),(15,'Compra a proveedor',20,'2023-11-05',3),(16,'Nuevo Producto',50,'2023-11-15',4),(17,'Nuevo Producto',25,'2023-11-15',5),(18,'Venta a cliente',1,'2023-11-15',1),(19,'Venta a cliente',3,'2023-11-15',5),(20,'Venta a cliente',5,'2023-11-15',4),(21,'Venta a cliente',2,'2023-11-15',2),(22,'Venta a cliente',1,'2023-11-15',1),(23,'Venta a cliente',20,'2023-11-15',3),(24,'Compra a proveedor',10,'2023-11-15',5),(25,'Compra a proveedor',25,'2023-11-15',4);
 /*!40000 ALTER TABLE `papeleria_movimientoproducto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -434,7 +435,7 @@ CREATE TABLE `papeleria_pedido` (
   KEY `Papeleria_pedido_ID_PROVEEDOR_PEDIDO__7ce469d7_fk_Papeleria` (`ID_PROVEEDOR_PEDIDO_id`),
   CONSTRAINT `Papeleria_pedido_ID_PRODUCTO_PEDIDO_i_dc134baa_fk_Papeleria` FOREIGN KEY (`ID_PRODUCTO_PEDIDO_id`) REFERENCES `papeleria_producto` (`ID_PRODUCTO`),
   CONSTRAINT `Papeleria_pedido_ID_PROVEEDOR_PEDIDO__7ce469d7_fk_Papeleria` FOREIGN KEY (`ID_PROVEEDOR_PEDIDO_id`) REFERENCES `papeleria_proveedor` (`ID_PROVEEDOR`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -443,7 +444,7 @@ CREATE TABLE `papeleria_pedido` (
 
 LOCK TABLES `papeleria_pedido` WRITE;
 /*!40000 ALTER TABLE `papeleria_pedido` DISABLE KEYS */;
-INSERT INTO `papeleria_pedido` VALUES (8,10,160000,'A',1,2,'2023-11-05','2023-11-10'),(9,7,21000,'A',2,1,'2023-11-05','2023-11-10');
+INSERT INTO `papeleria_pedido` VALUES (8,10,160000,'A',1,2,'2023-11-05','2023-11-10'),(9,7,21000,'A',2,1,'2023-11-05','2023-11-10'),(11,10,15000,'A',5,4,'2023-11-15','2023-11-18'),(12,25,7500,'A',4,5,'2023-11-15','2023-11-20');
 /*!40000 ALTER TABLE `papeleria_pedido` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -465,7 +466,7 @@ CREATE TABLE `papeleria_producto` (
   PRIMARY KEY (`ID_PRODUCTO`),
   KEY `Papeleria_producto_ID_CATEGORIA_PRODUCT_f591d583_fk_Papeleria` (`ID_CATEGORIA_PRODUCTO_id`),
   CONSTRAINT `Papeleria_producto_ID_CATEGORIA_PRODUCT_f591d583_fk_Papeleria` FOREIGN KEY (`ID_CATEGORIA_PRODUCTO_id`) REFERENCES `papeleria_categoria` (`ID_CATEGORIA`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -474,7 +475,7 @@ CREATE TABLE `papeleria_producto` (
 
 LOCK TABLES `papeleria_producto` WRITE;
 /*!40000 ALTER TABLE `papeleria_producto` DISABLE KEYS */;
-INSERT INTO `papeleria_producto` VALUES (1,'Hotwheels',20,10000,'A',1,19.00),(2,'Cuaderno anillado',20,5000,'A',2,15.00),(3,'Papel Carta',70,2000,'A',3,12.00);
+INSERT INTO `papeleria_producto` VALUES (1,'Hotwheels',18,10000,'A',1,19.00),(2,'Cuaderno anillado',18,5000,'A',2,15.00),(3,'Papel Carta',50,2000,'A',3,12.00),(4,'Shampoo en sachet',70,500,'A',5,15.00),(5,'Gomitas Trululu',32,2000,'A',6,12.00);
 /*!40000 ALTER TABLE `papeleria_producto` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -493,7 +494,7 @@ CREATE TABLE `papeleria_proveedor` (
   `TELEFONO_PROVEEDOR` varchar(30) NOT NULL,
   `ESTADO_PROVEEDOR` varchar(1) NOT NULL,
   PRIMARY KEY (`ID_PROVEEDOR`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -502,7 +503,7 @@ CREATE TABLE `papeleria_proveedor` (
 
 LOCK TABLES `papeleria_proveedor` WRITE;
 /*!40000 ALTER TABLE `papeleria_proveedor` DISABLE KEYS */;
-INSERT INTO `papeleria_proveedor` VALUES (1,'Norma','calle 23','norma@hotmail.com','3503491032','A'),(2,'Mattel','calle 53','mattel@hotmail.com','3049103842','A');
+INSERT INTO `papeleria_proveedor` VALUES (1,'Norma','calle 23','norma@hotmail.com','3503491032','A'),(2,'Mattel','calle 53','mattel@hotmail.com','3049103842','A'),(4,'Super','calle 13','super@gmail.com','3940193042','A'),(5,'Unilever','Av Americas','unilever@gmail.com','3948501843','A');
 /*!40000 ALTER TABLE `papeleria_proveedor` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -515,4 +516,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-05 21:06:54
+-- Dump completed on 2023-11-18 18:23:11
