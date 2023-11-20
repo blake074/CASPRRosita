@@ -1,10 +1,33 @@
 body {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f37d9c;
+    background-color: #B0E0E6;
+  }
+
+.nav{
+    background-color: #FFD1DC;
 }
 
-.container-fluid{
+  .navbar {
+    background-color: #0c0c0c;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+  }
 
-}
+  .navbar-brand {
+    color: #283747 !important;
+    font-weight: bold;
+    text-decoration: none;
+    margin-right: 10px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+ }
+
+  .navbar a {
+    color: #0c0c0c;
+    font-weight: bold;
+    text-decoration: none;
+    margin-right: 10px;
+  }
+
+  .navbar a:hover {
+    color: #f30303;
+  }
